@@ -11,6 +11,9 @@ void main() {
       SystemUiOverlayStyle.dark.systemNavigationBarColor,
     ),
   );
+  // SystemChrome.setPreferredOrientations(
+  //     [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight])
+  //     .then((_) => runApp(MyApp()));
   runApp(MyApp());
 }
 
@@ -24,7 +27,7 @@ class MyApp extends StatelessWidget {
         // brightness: Brightness.dark,
         primarySwatch: Colors.deepPurple,
         accentColor: Colors.orange,
-        textSelectionTheme: TextSelectionThemeData(cursorColor: Colors.orange),
+        textSelectionTheme: const TextSelectionThemeData(cursorColor: Colors.orange),
         // fontFamily: 'SourceSansPro',
         textTheme: TextTheme(
           headline3: TextStyle(

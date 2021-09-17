@@ -1,11 +1,8 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_login/theme.dart';
 import 'package:flutter_login/widgets.dart';
-import 'package:stansand_african_limited/widgets/animated_numeric_text.dart';
 import 'package:stansand_african_limited/widgets/fade_in.dart';
-import 'package:stansand_african_limited/widgets/round_button.dart';
 import 'transition_route_observer.dart';
 import 'constants.dart';
 
@@ -21,7 +18,6 @@ class _DashboardScreenState extends State<DashboardScreen>
   Future<bool> _goToLogin(BuildContext context) {
     return Navigator.of(context)
         .pushReplacementNamed('/')
-        // we dont want to pop the screen, just replace it completely
         .then((_) => false);
   }
 
@@ -34,7 +30,6 @@ class _DashboardScreenState extends State<DashboardScreen>
   void initState() {
     super.initState();
   }
-
 
   AppBar _buildAppBar(ThemeData theme) {
     final menuBtn = IconButton(
@@ -98,8 +93,6 @@ class _DashboardScreenState extends State<DashboardScreen>
     );
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -109,11 +102,10 @@ class _DashboardScreenState extends State<DashboardScreen>
       child: SafeArea(
         child: Scaffold(
           body: Container(
-            width: double.infinity,
-            height: double.infinity,
-            color: theme.primaryColor.withOpacity(.1),
-            child: Container()
-          ),
+              width: double.infinity,
+              height: double.infinity,
+              color: theme.primaryColor.withOpacity(.1),
+              child: Container()),
         ),
       ),
     );

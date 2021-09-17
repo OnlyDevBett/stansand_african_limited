@@ -1,10 +1,10 @@
 import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_login/flutter_login.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:stansand_african_limited/login/dashboard_screen.dart';
 import 'constants.dart';
 import 'custom_route.dart';
-import 'dashboard_screen.dart';
 import 'users.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -37,7 +37,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlutterLogin(
       title: Constants.appName,
-      logo: 'assets/images/ecorp.png',
+      logo: 'assets/images/logo.png',
       logoTag: Constants.logoTag,
       titleTag: Constants.titleTag,
       navigateBackAfterRecovery: true,
@@ -67,9 +67,13 @@ class LoginScreen extends StatelessWidget {
         return _loginUser(loginData);
       },
       onSubmitAnimationCompleted: () {
-        Navigator.of(context).pushReplacement(FadePageRoute(
-          builder: (context) => DashboardScreen(),
-        ));
+        SystemChrome.setPreferredOrientations(
+            [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight])
+            .then((_) =>
+            Navigator.of(context).pushReplacement(FadePageRoute(
+              builder: (context) => DashboardScreen(),
+
+            )));
       },
       onRecoverPassword: (name) {
         print('Recover password info');
