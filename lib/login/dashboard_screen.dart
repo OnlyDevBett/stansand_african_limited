@@ -1,14 +1,15 @@
+import 'dart:core';
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_login/theme.dart';
-import 'package:flutter_login/widgets.dart';
-import 'package:stansand_african_limited/constants/colors.dart';
-import 'package:stansand_african_limited/widgets/fade_in.dart';
+import 'package:flutter/services.dart' show ByteData, rootBundle;
+import 'package:open_file/open_file.dart';
 import 'transition_route_observer.dart';
-import 'constants.dart';
 
 class DashboardScreen extends StatefulWidget {
   static const routeName = '/dashboard';
+
+  const DashboardScreen({Key? key}) : super(key: key);
 
   @override
   _DashboardScreenState createState() => _DashboardScreenState();
@@ -16,6 +17,8 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen>
     with SingleTickerProviderStateMixin, TransitionRouteAware {
+  var key = GlobalKey();
+
   Future<bool> _goToLogin(BuildContext context) {
     return Navigator.of(context).pushReplacementNamed('/').then((_) => false);
   }
@@ -30,9 +33,34 @@ class _DashboardScreenState extends State<DashboardScreen>
     super.initState();
   }
 
+  var value;
+  var _openResult = 'Unknown';
+
+  Future<void> openFile() async {
+    String filePath = await rootBundle.loadString('assets/excel/data.xlsx');
+
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['xlsx'],
+    );
+    if (result != null) {
+      filePath = result.files.single.path!;
+    }
+    final _result = await OpenFile.open(filePath);
+    print(
+        '====================================================================');
+    print(_result.toString());
+
+    setState(() {
+      _openResult = "type=${_result.type}  message=${_result.message}";
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final _vendorID = TextEditingController();
+    final _catalogueNumber = TextEditingController();
 
     return WillPopScope(
       onWillPop: () => _goToLogin(context),
@@ -43,52 +71,113 @@ class _DashboardScreenState extends State<DashboardScreen>
             height: double.infinity,
             color: theme.primaryColor.withOpacity(.1),
             child: ListView(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
               children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Row(
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {},
-                        child: const Text("Refresh"),
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.green),
-                          foregroundColor:
-                              MaterialStateProperty.all(Colors.amber),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: _vendorID,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.purple),
+                          ),
+                          hintText: 'Vendor ID',
+                          suffixStyle: TextStyle(color: Colors.green),
                         ),
                       ),
-                      ElevatedButton(
-                        onPressed: () {},
-                        child: const Text("Min"),
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.green),
-                          foregroundColor:
-                              MaterialStateProperty.all(Colors.amber),
+                    ),
+                    const SizedBox(
+                      width: 10.0,
+                    ),
+                    Expanded(
+                      child: TextFormField(
+                        controller: _catalogueNumber,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.purple),
+                          ),
+                          hintText: 'Catalogue Number',
+                          suffixStyle: TextStyle(color: Colors.green),
                         ),
                       ),
-                      ElevatedButton(
+                    ),
+                    const SizedBox(
+                      width: 10.0,
+                    ),
+                    Expanded(
+                      child: ElevatedButton(
                         onPressed: () {},
-                        child: const Text("Select"),
+                        child: const Text("Load"),
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(Colors.green),
+                              MaterialStateProperty.all(Colors.purple),
                           foregroundColor:
-                              MaterialStateProperty.all(Colors.amber),
+                              MaterialStateProperty.all(Colors.white),
                         ),
                       ),
-                      ElevatedButton(
+                    ),
+                    const SizedBox(
+                      width: 10.0,
+                    ),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: const Text("Push"),
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.purple),
+                          foregroundColor:
+                              MaterialStateProperty.all(Colors.white),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10.0,
+                    ),
+                    Expanded(
+                      child: ElevatedButton(
                         onPressed: () {},
                         child: const Text("Comment"),
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(Colors.green),
+                              MaterialStateProperty.all(Colors.purple),
                           foregroundColor:
-                              MaterialStateProperty.all(Colors.amber),
+                              MaterialStateProperty.all(Colors.white),
                         ),
                       ),
-                    ],
+                    ),
+                    const SizedBox(
+                      width: 10.0,
+                    ),
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.account_circle_outlined),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.purple,
+                      ),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text('open result: $_openResult\n'),
+                        TextButton(
+                          child: Text('Tap to open file'),
+                          onPressed: openFile,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
