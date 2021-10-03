@@ -1,13 +1,15 @@
 import 'dart:convert';
 import 'dart:core';
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart' show ByteData, rootBundle;
 import 'transition_route_observer.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class SortedScreen extends StatefulWidget {
-  static const routeName = '/dashboard';
+  static const routeName = '/sortedPage';
 
   const SortedScreen({Key? key}) : super(key: key);
 
@@ -28,10 +30,16 @@ class _SortedScreenState extends State<SortedScreen>
   late Animation<double> _headerScaleAnimation;
   AnimationController? _loadingController;
 
+  late stt.SpeechToText _speech;
+  bool _isListening = false;
+  String _text = 'Press the button and start speaking';
+  double _confidence = 1.0;
+
   @override
   void initState() {
     super.initState();
     loadAsset();
+    _speech = stt.SpeechToText();
   }
 
   List<List<dynamic>> data = [];
@@ -102,39 +110,25 @@ class _SortedScreenState extends State<SortedScreen>
                         child: const Text("Load"),
                         style: ButtonStyle(
                           backgroundColor:
-                          MaterialStateProperty.all(Colors.purple),
+                              MaterialStateProperty.all(Colors.purple),
                           foregroundColor:
-                          MaterialStateProperty.all(Colors.white),
+                              MaterialStateProperty.all(Colors.white),
                         ),
                       ),
                     ),
                     const SizedBox(
                       width: 10.0,
                     ),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        child: const Text("Push"),
-                        style: ButtonStyle(
-                          backgroundColor:
-                          MaterialStateProperty.all(Colors.purple),
-                          foregroundColor:
-                          MaterialStateProperty.all(Colors.white),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10.0,
-                    ),
+
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {},
                         child: const Text("Comment"),
                         style: ButtonStyle(
                           backgroundColor:
-                          MaterialStateProperty.all(Colors.purple),
+                              MaterialStateProperty.all(Colors.purple),
                           foregroundColor:
-                          MaterialStateProperty.all(Colors.white),
+                              MaterialStateProperty.all(Colors.white),
                         ),
                       ),
                     ),
@@ -147,7 +141,6 @@ class _SortedScreenState extends State<SortedScreen>
                     ),
                   ],
                 ),
-
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
@@ -160,7 +153,7 @@ class _SortedScreenState extends State<SortedScreen>
                     ),
                     child: FutureBuilder(
                       future: DefaultAssetBundle.of(context)
-                          .loadString('assets/excel/data.json'),
+                          .loadString('assets/excel/datas.json'),
                       builder: (context, snapshot) {
                         var showData = jsonDecode(snapshot.data.toString());
                         return ListView.builder(
@@ -168,23 +161,20 @@ class _SortedScreenState extends State<SortedScreen>
                           itemBuilder: (BuildContext context, int index) {
                             return Padding(
                               padding:
-                              const EdgeInsets.only(left: 8.0, right: 8.0),
+                                  const EdgeInsets.only(left: 8.0, right: 8.0),
                               child: Row(
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         left: 3.0, right: 3.0),
-                                    child: Text(showData[index]['Leaf Type']),
+                                    child:
+                                        Text(showData[index]['Seq'].toString()),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         left: 3.0, right: 3.0),
-                                    child: Text(showData[index]['Purchase For']),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 3.0, right: 3.0),
-                                    child: Text(showData[index]['Inventory']),
+                                    child:
+                                        Text(showData[index]['Auction Type']),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
@@ -194,12 +184,12 @@ class _SortedScreenState extends State<SortedScreen>
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         left: 3.0, right: 3.0),
-                                    child: Text(showData[index]['Kenyan Tea']),
+                                    child: Text(showData[index]['Lot No'].toString()),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         left: 3.0, right: 3.0),
-                                    child: Text(showData[index]['RA Tea']),
+                                    child: Text(showData[index]['Invoice']),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
@@ -209,24 +199,41 @@ class _SortedScreenState extends State<SortedScreen>
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         left: 3.0, right: 3.0),
-                                    child: Text(showData[index]['Pkg']),
-                                  ), Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 3.0, right: 3.0),
-                                    child: Text(showData[index]['Lot No'].toString()),
+                                    child: Text(showData[index]['Cat Pkgs'].toString()),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         left: 3.0, right: 3.0),
-                                    child: Text(showData[index]['Invoice'].toString()),
+                                    child: Text(
+                                        showData[index]['Cat Wght'].toString()),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         left: 3.0, right: 3.0),
-                                    child: Text(showData[index]['Uhuru']),
+                                    child: Text(
+                                        showData[index]['Cat Pkgs,Wght'].toString()),
                                   ),
-
-
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 3.0, right: 3.0),
+                                    child: Text(showData[index]['Liqor Remarks']),
+                                  ),
+                                  AvatarGlow(
+                                    animate: _isListening,
+                                    glowColor: Theme.of(context).primaryColor,
+                                    endRadius: 75.0,
+                                    duration:
+                                        const Duration(milliseconds: 2000),
+                                    repeatPauseDuration:
+                                        const Duration(milliseconds: 100),
+                                    repeat: true,
+                                    child: FloatingActionButton(
+                                      onPressed: _listen,
+                                      child: Icon(_isListening
+                                          ? Icons.mic
+                                          : Icons.mic_none),
+                                    ),
+                                  ),
                                 ],
                               ),
                             );
@@ -242,5 +249,28 @@ class _SortedScreenState extends State<SortedScreen>
         ),
       ),
     );
+  }
+
+  void _listen() async {
+    if (!_isListening) {
+      bool available = await _speech.initialize(
+        onStatus: (val) => print('onStatus: $val'),
+        onError: (val) => print('onError: $val'),
+      );
+      if (available) {
+        setState(() => _isListening = true);
+        _speech.listen(
+          onResult: (val) => setState(() {
+            _text = val.recognizedWords;
+            if (val.hasConfidenceRating && val.confidence > 0) {
+              _confidence = val.confidence;
+            }
+          }),
+        );
+      }
+    } else {
+      setState(() => _isListening = false);
+      _speech.stop();
+    }
   }
 }

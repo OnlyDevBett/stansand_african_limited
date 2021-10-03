@@ -4,6 +4,7 @@ import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart' show ByteData, rootBundle;
+import 'package:stansand_african_limited/login/sorted_page.dart';
 import 'transition_route_observer.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -42,11 +43,25 @@ class _DashboardScreenState extends State<DashboardScreen>
     data = csvTable;
   }
 
+  bool isChecked = false;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final _vendorID = TextEditingController();
     final _catalogueNumber = TextEditingController();
+
+    Color getColor(Set<MaterialState> states) {
+      const Set<MaterialState> interactiveStates = <MaterialState>{
+        MaterialState.pressed,
+        MaterialState.hovered,
+        MaterialState.focused,
+      };
+      if (states.any(interactiveStates.contains)) {
+        return Colors.blue;
+      }
+      return Colors.red;
+    }
 
     return WillPopScope(
       onWillPop: () => _goToLogin(context),
@@ -63,6 +78,21 @@ class _DashboardScreenState extends State<DashboardScreen>
                 ),
                 Row(
                   children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: _vendorID,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.purple),
+                          ),
+                          hintText: 'Auction NO',
+                          suffixStyle: TextStyle(color: Colors.green),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10.0,
+                    ),
                     Expanded(
                       child: TextFormField(
                         controller: _vendorID,
@@ -113,7 +143,11 @@ class _DashboardScreenState extends State<DashboardScreen>
                     ),
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  const SortedScreen()));
+                        },
                         child: const Text("Push"),
                         style: ButtonStyle(
                           backgroundColor:
@@ -141,13 +175,8 @@ class _DashboardScreenState extends State<DashboardScreen>
                     const SizedBox(
                       width: 10.0,
                     ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.account_circle_outlined),
-                    ),
                   ],
                 ),
-
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
@@ -167,69 +196,83 @@ class _DashboardScreenState extends State<DashboardScreen>
                           itemCount: showData.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 8.0, right: 8.0),
-                              child: Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 3.0, right: 3.0),
-                                    child: Text(showData[index]['Leaf Type']),
+                                padding: const EdgeInsets.only(
+                                    left: 8.0, right: 8.0),
+                                child: ListTile(
+                                  title: Row(
+                                    children: [
+                                      Checkbox(
+                                        checkColor: Colors.white,
+                                        fillColor:
+                                            MaterialStateProperty.resolveWith(
+                                          getColor,
+                                        ),
+                                        value: isChecked,
+                                        onChanged: (bool? value) {
+                                          setState(() {
+                                            isChecked = value!;
+                                          });
+                                        },
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 3.0, right: 3.0),
+                                        child:
+                                            Text(showData[index]['Leaf Type']),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 3.0, right: 3.0),
+                                        child: Text(
+                                            showData[index]['Purchase For']),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 3.0, right: 3.0),
+                                        child:
+                                            Text(showData[index]['Inventory']),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 3.0, right: 3.0),
+                                        child: Text(showData[index]['Garden']),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 3.0, right: 3.0),
+                                        child:
+                                            Text(showData[index]['Kenyan Tea']),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 3.0, right: 3.0),
+                                        child: Text(showData[index]['RA Tea']),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 3.0, right: 3.0),
+                                        child: Text(showData[index]['Grade']),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 3.0, right: 3.0),
+                                        child: Text(showData[index]['Pkg']),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 3.0, right: 3.0),
+                                        child: Text(showData[index]['Lot No']
+                                            .toString()),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 3.0, right: 3.0),
+                                        child: Text(showData[index]['Invoice']
+                                            .toString()),
+                                      ),
+                                    ],
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 3.0, right: 3.0),
-                                    child: Text(showData[index]['Purchase For']),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 3.0, right: 3.0),
-                                    child: Text(showData[index]['Inventory']),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 3.0, right: 3.0),
-                                    child: Text(showData[index]['Garden']),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 3.0, right: 3.0),
-                                    child: Text(showData[index]['Kenyan Tea']),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 3.0, right: 3.0),
-                                    child: Text(showData[index]['RA Tea']),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 3.0, right: 3.0),
-                                    child: Text(showData[index]['Grade']),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 3.0, right: 3.0),
-                                    child: Text(showData[index]['Pkg']),
-                                  ), Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 3.0, right: 3.0),
-                                    child: Text(showData[index]['Lot No'].toString()),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 3.0, right: 3.0),
-                                    child: Text(showData[index]['Invoice'].toString()),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 3.0, right: 3.0),
-                                    child: Text(showData[index]['Uhuru']),
-                                  ),
-
-
-                                ],
-                              ),
-                            );
+                                ));
                           },
                         );
                       },
