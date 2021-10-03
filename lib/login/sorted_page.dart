@@ -6,16 +6,16 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart' show ByteData, rootBundle;
 import 'transition_route_observer.dart';
 
-class DashboardScreen extends StatefulWidget {
+class SortedScreen extends StatefulWidget {
   static const routeName = '/dashboard';
 
-  const DashboardScreen({Key? key}) : super(key: key);
+  const SortedScreen({Key? key}) : super(key: key);
 
   @override
-  _DashboardScreenState createState() => _DashboardScreenState();
+  _SortedScreenState createState() => _SortedScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen>
+class _SortedScreenState extends State<SortedScreen>
     with SingleTickerProviderStateMixin, TransitionRouteAware {
   var key = GlobalKey();
 
@@ -102,9 +102,9 @@ class _DashboardScreenState extends State<DashboardScreen>
                         child: const Text("Load"),
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(Colors.purple),
+                          MaterialStateProperty.all(Colors.purple),
                           foregroundColor:
-                              MaterialStateProperty.all(Colors.white),
+                          MaterialStateProperty.all(Colors.white),
                         ),
                       ),
                     ),
@@ -117,9 +117,9 @@ class _DashboardScreenState extends State<DashboardScreen>
                         child: const Text("Push"),
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(Colors.purple),
+                          MaterialStateProperty.all(Colors.purple),
                           foregroundColor:
-                              MaterialStateProperty.all(Colors.white),
+                          MaterialStateProperty.all(Colors.white),
                         ),
                       ),
                     ),
@@ -132,9 +132,9 @@ class _DashboardScreenState extends State<DashboardScreen>
                         child: const Text("Comment"),
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(Colors.purple),
+                          MaterialStateProperty.all(Colors.purple),
                           foregroundColor:
-                              MaterialStateProperty.all(Colors.white),
+                          MaterialStateProperty.all(Colors.white),
                         ),
                       ),
                     ),
@@ -168,7 +168,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                           itemBuilder: (BuildContext context, int index) {
                             return Padding(
                               padding:
-                                  const EdgeInsets.only(left: 8.0, right: 8.0),
+                              const EdgeInsets.only(left: 8.0, right: 8.0),
                               child: Row(
                                 children: [
                                   Padding(

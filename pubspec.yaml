@@ -32,10 +32,10 @@ dependencies:
   flutter_login: ^2.2.1
   responsive_builder: ^0.2.0+2
   excel: ^1.1.5
-  open_file: ^3.2.1
   file_picker: ^4.0.0
   path: ^1.8.0
   path_provider: ^2.0.2
+  csv: ^5.0.0
 
 dev_dependencies:
   flutter_test:
