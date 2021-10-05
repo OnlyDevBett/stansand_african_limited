@@ -35,6 +35,7 @@ class _SortedScreenState extends State<SortedScreen>
   String _text = 'Press the button and start speaking';
   double _confidence = 1.0;
 
+
   @override
   void initState() {
     super.initState();
@@ -55,6 +56,7 @@ class _SortedScreenState extends State<SortedScreen>
     final theme = Theme.of(context);
     final _vendorID = TextEditingController();
     final _catalogueNumber = TextEditingController();
+    final assets = DefaultAssetBundle.of(context).loadString('assets/excel/datas.json');
 
     return WillPopScope(
       onWillPop: () => _goToLogin(context),

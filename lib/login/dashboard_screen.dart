@@ -50,6 +50,7 @@ class _DashboardScreenState extends State<DashboardScreen>
     final theme = Theme.of(context);
     final _vendorID = TextEditingController();
     final _catalogueNumber = TextEditingController();
+    final assets = DefaultAssetBundle.of(context).loadString('assets/excel/data.json');
 
     Color getColor(Set<MaterialState> states) {
       const Set<MaterialState> interactiveStates = <MaterialState>{
@@ -188,11 +189,10 @@ class _DashboardScreenState extends State<DashboardScreen>
                       ),
                     ),
                     child: FutureBuilder(
-                      future: DefaultAssetBundle.of(context)
-                          .loadString('assets/excel/data.json'),
+                      future: assets,
                       builder: (context, snapshot) {
                         var showData = jsonDecode(snapshot.data.toString());
-                        return ListView.builder(
+                        return  ListView.builder(
                           itemCount: showData.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Padding(
