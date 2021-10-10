@@ -44,13 +44,16 @@ class _DashboardScreenState extends State<DashboardScreen>
   }
 
   bool isChecked = false;
+  bool selected = false;
+  var userStatus = <bool>[];
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final _vendorID = TextEditingController();
     final _catalogueNumber = TextEditingController();
-    final assets = DefaultAssetBundle.of(context).loadString('assets/excel/data.json');
+    final assets =
+    DefaultAssetBundle.of(context).loadString('assets/excel/data.json');
 
     Color getColor(Set<MaterialState> states) {
       const Set<MaterialState> interactiveStates = <MaterialState>{
@@ -133,9 +136,9 @@ class _DashboardScreenState extends State<DashboardScreen>
                         child: const Text("Load"),
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(Colors.purple),
+                          MaterialStateProperty.all(Colors.purple),
                           foregroundColor:
-                              MaterialStateProperty.all(Colors.white),
+                          MaterialStateProperty.all(Colors.white),
                         ),
                       ),
                     ),
@@ -147,14 +150,14 @@ class _DashboardScreenState extends State<DashboardScreen>
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (BuildContext context) =>
-                                  const SortedScreen()));
+                              const SortedScreen()));
                         },
                         child: const Text("Push"),
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(Colors.purple),
+                          MaterialStateProperty.all(Colors.purple),
                           foregroundColor:
-                              MaterialStateProperty.all(Colors.white),
+                          MaterialStateProperty.all(Colors.white),
                         ),
                       ),
                     ),
@@ -167,9 +170,9 @@ class _DashboardScreenState extends State<DashboardScreen>
                         child: const Text("Comment"),
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(Colors.purple),
+                          MaterialStateProperty.all(Colors.purple),
                           foregroundColor:
-                              MaterialStateProperty.all(Colors.white),
+                          MaterialStateProperty.all(Colors.white),
                         ),
                       ),
                     ),
@@ -190,35 +193,25 @@ class _DashboardScreenState extends State<DashboardScreen>
                     ),
                     child: FutureBuilder(
                       future: assets,
-                      builder: (context, snapshot) {
+                      builder: (context, AsyncSnapshot snapshot) {
                         var showData = jsonDecode(snapshot.data.toString());
-                        return  ListView.builder(
-                          itemCount: showData.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Padding(
+                        if (snapshot.data == null) {
+                          return const Center(child: Text("Loading..."));
+                        } else {
+                          return ListView.builder(
+                            itemCount: showData.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Padding(
                                 padding: const EdgeInsets.only(
                                     left: 8.0, right: 8.0),
                                 child: ListTile(
                                   title: Row(
                                     children: [
-                                      Checkbox(
-                                        checkColor: Colors.white,
-                                        fillColor:
-                                            MaterialStateProperty.resolveWith(
-                                          getColor,
-                                        ),
-                                        value: isChecked,
-                                        onChanged: (bool? value) {
-                                          setState(() {
-                                            isChecked = value!;
-                                          });
-                                        },
-                                      ),
                                       Padding(
                                         padding: const EdgeInsets.only(
                                             left: 3.0, right: 3.0),
                                         child:
-                                            Text(showData[index]['Leaf Type']),
+                                        Text(showData[index]['Leaf Type']),
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.only(
@@ -230,7 +223,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                                         padding: const EdgeInsets.only(
                                             left: 3.0, right: 3.0),
                                         child:
-                                            Text(showData[index]['Inventory']),
+                                        Text(showData[index]['Inventory']),
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.only(
@@ -241,7 +234,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                                         padding: const EdgeInsets.only(
                                             left: 3.0, right: 3.0),
                                         child:
-                                            Text(showData[index]['Kenyan Tea']),
+                                        Text(showData[index]['Kenyan Tea']),
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.only(
@@ -272,9 +265,24 @@ class _DashboardScreenState extends State<DashboardScreen>
                                       ),
                                     ],
                                   ),
-                                ));
-                          },
-                        );
+                                  trailing: Checkbox(
+                                    checkColor: Colors.white,
+                                    fillColor:
+                                    MaterialStateProperty.resolveWith(
+                                      getColor,
+                                    ),
+                                    value: isChecked,
+                                    onChanged: (bool? value) {
+                                      setState(() {
+                                        isChecked = value!;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        }
                       },
                     ),
                   ),
