@@ -123,13 +123,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_text_to_speech:
-    dependency: "direct main"
-    description:
-      name: flutter_text_to_speech
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.7"
   font_awesome_flutter:
     dependency: "direct main"
     description:
@@ -143,7 +136,7 @@ packages:
       name: highlight_text
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.7.2"
+    version: "1.2.0"
   intl:
     dependency: "direct main"
     description:
